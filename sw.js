@@ -1,6 +1,6 @@
 // Service worker: powloka offline + cache audio na zadanie. Wersja zmienia sie przy kazdym wydaniu.
-const VERSION = 'mmj-aa57ff397b';
-const SHELL = ["./assets/index-Db9vlolN.js", "./assets/index-XGlegFG8.css", "./assets/klee-one-sub-BAMtRd1v.woff2", './', './index.html', './manifest.webmanifest', './strokes.json', './audio-manifest.json', './icon.svg', './icon-180.png', './icon-512.png'];
+const VERSION = 'mmj-a03dbd98f4';
+const SHELL = ["./assets/index-Boi93MKc.css", "./assets/index-U_OGgacf.js", "./assets/klee-one-sub-BAMtRd1v.woff2", './', './index.html', './manifest.webmanifest', './strokes.json', './audio-manifest.json', './icon.svg', './icon-180.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== 'mmj-audio').map(k => caches.delete(k)))).then(() => self.clients.claim())); });
 self.addEventListener('message', e => {
