@@ -1,8 +1,17 @@
 // Service worker: powloka offline + cache audio na zadanie. Wersja zmienia sie przy kazdym wydaniu.
-const VERSION = 'mmj-a03dbd98f4';
-const SHELL = ["./assets/index-Boi93MKc.css", "./assets/index-U_OGgacf.js", "./assets/klee-one-sub-BAMtRd1v.woff2", './', './index.html', './manifest.webmanifest', './strokes.json', './audio-manifest.json', './icon.svg', './icon-180.png', './icon-512.png'];
+const VERSION = 'mmj-fc670ed1ea';
+const SHELL = ["./assets/index-B4zg_if3.css", "./assets/index-Bt96x4St.js", "./assets/klee-one-sub-BAMtRd1v.woff2", './', './index.html', './manifest.webmanifest', './strokes.json', './audio-manifest.json', './icon.svg', './icon-180.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
-self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== 'mmj-audio').map(k => caches.delete(k)))).then(() => self.clients.claim())); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== 'mmj-audio').map(k => caches.delete(k)))).then(pruneAudio).then(() => self.clients.claim())); });
+// usuwa z pamieci nagrania, ktorych nie ma juz w manifescie (np. po zmianie glosow) — postep nauki jest w IndexedDB, nie tu
+async function pruneAudio() {
+  try {
+    const m = await (await fetch('./audio-manifest.json', { cache: 'no-store' })).json();
+    const keep = new Set(); for (const v of Object.values(m)) { if (v.n) keep.add(v.n); if (v.s) keep.add(v.s); }
+    const c = await caches.open('mmj-audio');
+    for (const req of await c.keys()) { const f = req.url.split('/').pop().split('?')[0]; if (!keep.has(f)) await c.delete(req); }
+  } catch { /* offline — sprobuje przy nastepnej aktualizacji */ }
+}
 self.addEventListener('message', e => {
   if (e.data?.type === 'cache-audio') {
     e.waitUntil(caches.open('mmj-audio').then(async c => { let n = 0; for (const u of e.data.urls) { if (!(await c.match(u))) { try { await c.add(u); } catch {} } n++; if (n % 50 === 0) e.source?.postMessage({ type: 'audio-progress', n }); } e.source?.postMessage({ type: 'audio-done', n }); }));
