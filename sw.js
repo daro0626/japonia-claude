@@ -1,6 +1,6 @@
 // Service worker: powloka offline + cache audio na zadanie. Wersja zmienia sie przy kazdym wydaniu.
-const VERSION = 'mmj-fc670ed1ea';
-const SHELL = ["./assets/index-B4zg_if3.css", "./assets/index-Bt96x4St.js", "./assets/klee-one-sub-BAMtRd1v.woff2", './', './index.html', './manifest.webmanifest', './strokes.json', './audio-manifest.json', './icon.svg', './icon-180.png', './icon-512.png'];
+const VERSION = 'mmj-2eb3bb2ce0';
+const SHELL = ["./assets/index-B4zg_if3.css", "./assets/index-R1yqf9O6.js", "./assets/klee-one-sub-BAMtRd1v.woff2", './', './index.html', './manifest.webmanifest', './strokes.json', './audio-manifest.json', './icon.svg', './icon-180.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== 'mmj-audio').map(k => caches.delete(k)))).then(pruneAudio).then(() => self.clients.claim())); });
 // usuwa z pamieci nagrania, ktorych nie ma juz w manifescie (np. po zmianie glosow) — postep nauki jest w IndexedDB, nie tu
