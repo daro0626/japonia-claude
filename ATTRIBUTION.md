@@ -8,3 +8,5 @@
 - **Ilustracje i maskotka Tomo:** własne grafiki SVG projektu.
 - **Wybór głosów (etap II, 27.11.2026):** porównanie zrozumiałości 12 konfiguracji na 15 próbkach i 28 krótkich słowach przez automatyczne rozpoznawanie mowy ReazonSpeech (sherpa-onnx, Apache-2.0, użyte tylko do kontroli). Nie był to odsłuch człowieka.
 - **Jakość językowa:** treść przygotowana z pomocą AI i sprawdzona automatycznie. Nie była recenzowana przez native speakera.
+- **Rozpoznawanie mowy na telefonie (od 2.1, pobierane na życzenie, katalog `asr/`):** **Powered by Moonshine AI** — model Moonshine v2 tiny-ja (quantized), This Moonshine AI Model is licensed under the Moonshine AI Community License, Copyright © Moonshine AI Ltd. All Rights Reserved (pełny tekst: `asr/MOONSHINE-LICENSE.txt`, informacja: `asr/NOTICE.txt`); użyty bez zmian, do osobistej, niekomercyjnej nauki. Eksport ONNX/ORT: sherpa-onnx (k2-fsa, Apache-2.0). Silnik: onnxruntime-web (MIT, `asr/ort/LICENSE.txt`).
+- **Słownik odczytów do porównywania rozpoznanego tekstu:** pochodny od IPADIC © Nara Institute of Science and Technology (licencja: `asr/IPADIC-LICENSE.txt`), zbudowany skryptem projektu z pakietu mecab-ipadic-seed.

@@ -1,6 +1,6 @@
 # Moja mała Japonia
 
-Miesięczny kurs japońskiego dla Kasi (aplikacja PWA, działa offline). Wersja 2.1.27.
+Miesięczny kurs japońskiego dla Kasi (aplikacja PWA, działa offline). Wersja 2.1.30.
 
 To repozytorium zawiera wyłącznie zbudowaną aplikację do hostingu na GitHub Pages.
 Źródła i licencje użytych zasobów: [ATTRIBUTION.md](ATTRIBUTION.md).

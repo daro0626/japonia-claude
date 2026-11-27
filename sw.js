@@ -1,8 +1,8 @@
 // Service worker: powloka offline + cache audio na zadanie. Wersja zmienia sie przy kazdym wydaniu.
-const VERSION = 'mmj-85f74fcf60';
-const SHELL = ["./assets/index-C8YCDQE0.js", "./assets/index-DWSX9wIl.css", "./assets/klee-one-sub-BAMtRd1v.woff2", './', './index.html', './manifest.webmanifest', './strokes.json', './audio-manifest.json', './icon.svg', './icon-180.png', './icon-512.png'];
+const VERSION = 'mmj-9e014d4347';
+const SHELL = ["./assets/index-CNjQiZXs.js", "./assets/index-Dw_o88HL.css", "./assets/klee-one-sub-BAMtRd1v.woff2", './', './index.html', './manifest.webmanifest', './strokes.json', './audio-manifest.json', './icon.svg', './icon-180.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
-self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== 'mmj-audio').map(k => caches.delete(k)))).then(pruneAudio).then(() => self.clients.claim())); });
+self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== VERSION && k !== 'mmj-audio' && k !== 'mmj-asr').map(k => caches.delete(k)))).then(pruneAudio).then(() => self.clients.claim())); });
 // usuwa z pamieci nagrania, ktorych nie ma juz w manifescie (np. po zmianie glosow) — postep nauki jest w IndexedDB, nie tu
 async function pruneAudio() {
   try {
@@ -20,6 +20,11 @@ self.addEventListener('message', e => {
 self.addEventListener('fetch', e => {
   const req = e.request; if (req.method !== 'GET') return;
   const url = new URL(req.url); if (url.origin !== location.origin) return;
+  // K-03: model rozpoznawania mowy — tylko z pamieci 'mmj-asr' (pobierany na zyczenie), bez kopii w powloce
+  if (url.pathname.includes('/asr/') && !url.pathname.endsWith('files.json')) {
+    e.respondWith(caches.open('mmj-asr').then(c => c.match(req.url.split('#')[0]).then(r => r || fetch(req))));
+    return;
+  }
   if (url.pathname.includes('/audio/')) {
     e.respondWith(audioResponse(req));
     return;
